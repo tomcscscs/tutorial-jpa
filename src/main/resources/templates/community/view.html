@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>JPA - tutorial</title>
+<link
+	href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
+	rel="stylesheet">
+</head>
+<body>
+	<div class="container py-3">
+		<div class="py-2 fs-4 border-bottom text-success">
+			<a th:href="@{/community/lists}"
+				class="link-underline-light link-success link-underline-opacity-0">익명
+				커뮤니티</a> <span class="fs-6 text-secondary">글보기</span>
+		</div>
+		<div th:object="${feed}" class="py-3">
+			<div class="border-bottom py-1">
+				<div class="">
+					<b th:text="*{title}" class="fs-5"></b>
+				</div>
+				<div class="d-flex justify-content-between ">
+					<div class="py-1">
+						<span th:text="*{writer}"></span> <small
+							th:text="'(' + *{ipAddress}+ ')' " class="text-secondary"></small>
+						<span>|</span> <small
+							th:text="*{#dates.format(writedAt, 'yyyy.MM.dd HH:mm:ss')}"
+							class="text-secondary"></small>
+					</div>
+					<div class="py-1" style="font-size: small;">
+						<span>조회</span> <span
+							th:text="${#numbers.formatInteger(feed.viewCount,1,'COMMA')}"></span>
+						<span>|</span> <span>추천</span> <span th:text="${feed.likeCount}"></span>
+					</div>
+				</div>
+			</div>
+			<div class="py-2 border-bottom" th:text="*{body}" style="white-space: pre; min-height: 300px">글 내용 적어주면 끝.</div>
+			<div class="d-flex justify-content-end gap-1 py-2">
+				<a th:href="@{/community/modify(id=*{id})}" class="btn btn-success btn-sm">수정</a>
+				<a th:href="@{/community/delete(id=*{id})}" class="btn btn-success btn-sm">삭제</a>
+			</div>
+		</div>
+	</div>
+</body>
+</html>
