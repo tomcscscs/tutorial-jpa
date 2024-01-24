@@ -1,6 +1,7 @@
 package org.edupoll.app.controller;
 
 import java.sql.Date;
+import java.util.List;
 import java.util.Optional;
 
 import org.edupoll.app.command.ModifyCommand;
@@ -8,6 +9,7 @@ import org.edupoll.app.command.RoleCheckCommand;
 import org.edupoll.app.command.WriteCommand;
 import org.edupoll.app.entity.Feed;
 import org.edupoll.app.repository.FeedRepository;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -55,7 +57,13 @@ public class CommunityController {
 
 	@GetMapping("/lists")
 	public String showFeedLists(Model model) {
-		Iterable<Feed> feeds = feedRepository.findAll();
+
+		// List<Feed> feeds = feedRepository.findAll(Sort.by("id").descending());
+		// List<Feed> feeds = feedRepository.findAll(Sort.by(Order.desc("id")));
+		// feedRepository.findAll(PageRequest.of(1, 5));
+		List<Feed> feeds = feedRepository.findAll(PageRequest.of(0, 10)).toList();
+
+		model.addAttribute("count", feedRepository.count());
 		model.addAttribute("feeds", feeds);
 
 		return "community/lists";
@@ -103,16 +111,14 @@ public class CommunityController {
 		return "redirect:/community/lists";
 
 	}
-	
-	
+
 	@GetMapping("/modify")
 	public String showModifyRoleCheckForm(@RequestParam Integer id, Model model) {
 		model.addAttribute("target", feedRepository.findById(id).get());
 
-		
 		return "community/modifyRoleCheck";
 	}
-	
+
 	@PostMapping("/modify")
 	public String showModify(@ModelAttribute RoleCheckCommand cmd, Model model) {
 		Optional<Feed> optional = feedRepository.findById(cmd.getFeedId());
@@ -130,7 +136,6 @@ public class CommunityController {
 		return "community/modify";
 	}
 
-	
 	@PutMapping("/modify")
 	public String proceedModify(@ModelAttribute ModifyCommand cmd) {
 		Feed target = feedRepository.findById(cmd.getTargetId()).get();
@@ -138,9 +143,9 @@ public class CommunityController {
 		target.setBody(cmd.getModifyBody());
 		target.setPassword(cmd.getModifyPassword());
 		target.setWriter(cmd.getModifyWriter());
-		
+
 		feedRepository.save(target);
-		
-		return "redirect:/community/view?id="+cmd.getTargetId();
+
+		return "redirect:/community/view?id=" + cmd.getTargetId();
 	}
 }
