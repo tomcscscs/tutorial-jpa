@@ -1,15 +1,17 @@
 package org.edupoll.app.controller;
 
-import java.sql.Date;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
 import org.edupoll.app.command.ModifyCommand;
 import org.edupoll.app.command.RoleCheckCommand;
+import org.edupoll.app.command.SearchCommand;
 import org.edupoll.app.command.WriteCommand;
 import org.edupoll.app.entity.Feed;
 import org.edupoll.app.repository.FeedRepository;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -45,7 +47,7 @@ public class CommunityController {
 				.likeCount(0L) //
 				.password(cmd.getPassword()) //
 				.title(cmd.getTitle()) //
-				.writedAt(new Date(System.currentTimeMillis())) //
+				.writedAt(LocalDateTime.now()) //
 				.writer(cmd.getWriter()).build();
 
 		Feed saved = feedRepository.save(feed);
@@ -56,14 +58,22 @@ public class CommunityController {
 	}
 
 	@GetMapping("/lists")
-	public String showFeedLists(Model model) {
+	public String showFeedLists(@ModelAttribute SearchCommand cmd, Model model) {
 
-		// List<Feed> feeds = feedRepository.findAll(Sort.by("id").descending());
-		// List<Feed> feeds = feedRepository.findAll(Sort.by(Order.desc("id")));
-		// feedRepository.findAll(PageRequest.of(1, 5));
-		List<Feed> feeds = feedRepository.findAll(PageRequest.of(0, 10)).toList();
+		int page = cmd.getPage() == null ? 1: cmd.getPage();
+		String keyword = cmd.getKeyword() == null ? "" : cmd.getKeyword();
+		
+		PageRequest pageRequest = PageRequest.of(page-1, 5, Sort.by("id").descending());
+		List<Feed> feeds = feedRepository.findByTitleContains(keyword, pageRequest);
+		
+		
+		// List<Feed> feeds = feedRepository.findAll(PageRequest.of(page - 1, 5, Sort.by("id").descending())).toList();
+//		Feed example = Feed.builder().writer("토토로").build();
 
-		model.addAttribute("count", feedRepository.count());
+//		List<Feed> feeds = feedRepository.findByTitleContains("또", PageRequest.of(page - 1, 5, Sort.by("id").descending()));
+
+		model.addAttribute("cmd", cmd);
+		model.addAttribute("count", feedRepository.countByTitleContains(keyword));
 		model.addAttribute("feeds", feeds);
 
 		return "community/lists";

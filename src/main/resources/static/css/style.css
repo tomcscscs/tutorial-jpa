@@ -1,0 +1,7 @@
+@charset "UTF-8";
+
+.active > .page-link {
+	background-color: #198754;
+	border-color: #198754;
+	
+}

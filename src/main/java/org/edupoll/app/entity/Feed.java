@@ -1,6 +1,7 @@
 package org.edupoll.app.entity;
 
 import java.sql.Date;
+import java.time.LocalDateTime;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -23,7 +24,7 @@ import lombok.Setter;
 @Table(name = "FEEDS")
 public class Feed {
 	@Id
-	@GeneratedValue(strategy = GenerationType.SEQUENCE)
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer id;
 
 	private String writer;
@@ -34,7 +35,7 @@ public class Feed {
 
 	private String ipAddress;
 
-	private Date writedAt;
+	private LocalDateTime writedAt;
 
 	private Long viewCount;
 	private Long likeCount;

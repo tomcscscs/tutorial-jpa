@@ -24,7 +24,7 @@
 						<span th:text="*{writer}"></span> <small
 							th:text="'(' + *{ipAddress}+ ')' " class="text-secondary"></small>
 						<span>|</span> <small
-							th:text="*{#dates.format(writedAt, 'yyyy.MM.dd HH:mm:ss')}"
+							th:text="*{#temporals.format(writedAt, 'yyyy.MM.dd HH:mm:ss')}"
 							class="text-secondary"></small>
 					</div>
 					<div class="py-1" style="font-size: small;">
@@ -34,7 +34,9 @@
 					</div>
 				</div>
 			</div>
-			<div class="py-2 border-bottom" th:text="*{body}" style="white-space: pre; min-height: 300px">글 내용 적어주면 끝.</div>
+			<div class="py-2 border-bottom" 
+				th:text="*{body}" 
+				style="white-space: pre-line; min-height: 300px">글 내용 적어주면 끝.</div>
 			<div class="d-flex justify-content-end gap-1 py-2">
 				<a th:href="@{/community/modify(id=*{id})}" class="btn btn-success btn-sm">수정</a>
 				<a th:href="@{/community/delete(id=*{id})}" class="btn btn-success btn-sm">삭제</a>
