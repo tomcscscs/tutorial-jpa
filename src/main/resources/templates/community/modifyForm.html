@@ -8,6 +8,14 @@
 	rel="stylesheet">
 </head>
 <body>
+	<div th:each="one : ${cmd}">
+	<span th:text=${one.feedId}></span>
+	</div>
+	
+	
+	
+	
+	
 	<div class="container py-3">
 		<div class="py-2 fs-4 border-bottom text-success">
 			<a th:href="@{/community/lists}"
@@ -16,8 +24,9 @@
 		</div>
 		<form th:action="@{/community/modify}" method="post"
 			autocomplete="off" class="py-2">
-			<input type="hidden" name="_method" value="put"/>
 			
+			<input type="hidden" name="_method" value="put"/>
+			<input type="hidden" name="id" th:value="${cmd.feedId}"/>
 			<div class="row mb-2 g-1">
 				<div class="col-auto">
 					<input type="text" class="form-control" name="writer"

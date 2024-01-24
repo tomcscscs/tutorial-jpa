@@ -1,4 +1,4 @@
-package org.edupoll.app.controller;
+ package org.edupoll.app.controller;
 
 import java.sql.Date;
 import java.util.Optional;
@@ -119,7 +119,7 @@ public class CommunityController {
 		Feed feed = optional.get();
 		boolean role = feed.getPassword().equals(cmd.getFeedPassword());
 		if (!role) {
-			return "redirect:/community/modifyBefore?id=" + cmd.getFeedId();
+			return "redirect:/community/modifyBefore";
 		}
 		
 		model.addAttribute("roleCheckCommand", cmd);
